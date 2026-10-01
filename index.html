@@ -3,14 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Thapa Sensei - JFT Online Preparation Class</title>
+    <title>Thapa Sensei - JFT Online Preparation Class (Set コーヒー)</title>
     <!-- Firebase Libraries (v8) -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <style>
         * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; }
         
-        /* Furigana Styling - कान्जीको ठीक माथि देखाउनको लागि */
         rt {
             font-size: 10px !important;
             font-weight: bold !important;
@@ -26,7 +25,6 @@
             unicode-bidi: isolate;
         }
 
-        /* Underline line gap fix to prevent text touch */
         u, ins {
             text-decoration: underline;
             text-underline-offset: 4px;
@@ -87,7 +85,6 @@
         .exam-header-bar { display: flex; justify-content: space-between; align-items: center; background: #0d47a1; color: white; padding: 10px 14px; border-radius: 6px; margin-bottom: 12px; font-weight: bold; font-size: 14px; }
         .timer-box { background: #d32f2f; color: white; padding: 4px 10px; border-radius: 4px; font-size: 14px; }
 
-        /* पुरानै Grid लेआउट जसले साइडमा प्यालेट देखाउँछ */
         .exam-layout-grid { display: grid; grid-template-columns: 52px 1fr; gap: 10px; }
 
         .left-palette-sidebar { background: #f8f9fa; border: 1px solid #ddd; border-radius: 6px; padding: 4px 2px; height: fit-content; text-align: center; }
@@ -191,8 +188,9 @@
 </head>
 <body>
 
+    <!-- VIDEO element changed to AUDIO element to fix Zoom lag -->
     <div style="width:1px; height:1px; overflow:hidden; position:absolute; opacity:0.01;">
-        <video id="globalJftMedia" preload="auto" playsinline></video>
+        <audio id="globalJftMedia" preload="auto" playsinline></audio>
     </div>
 
     <div id="preloadContainer" style="display:none;"></div>
@@ -439,6 +437,21 @@
     };
 
     let isTeacherUser = false;
+
+    // Disables Right Click & Inspect Element safely without breaking Zoom/Tabs
+    document.addEventListener('contextmenu', function(e) {
+        if (!isTeacherUser) { e.preventDefault(); }
+    });
+
+    document.addEventListener('keydown', function(e) {
+        if (!isTeacherUser) {
+            if (e.key === 'F12' || 
+                (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) || 
+                (e.ctrlKey && (e.key === 'u' || e.key === 's'))) {
+                e.preventDefault();
+            }
+        }
+    });
 
     function startBackgroundPreloading() {
         const preloadContainer = document.getElementById('preloadContainer');
@@ -1170,7 +1183,7 @@
     }
 
     function nextSectionConfirm() {
-        if (confirm("⚠️️ Section Completion Alert:\n\nOnce you move to the next section, you cannot return to this section to change any answers.\n\nAre you sure you want to proceed to the next section?")) {
+        if (confirm("⚠️ Section Completion Alert:\n\nOnce you move to the next section, you cannot return to this section to change any answers.\n\nAre you sure you want to proceed to the next section?")) {
             if (currentStep < examSteps.length - 1) loadStep(currentStep + 1);
         }
     }
